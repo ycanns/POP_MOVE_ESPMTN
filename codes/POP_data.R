@@ -262,58 +262,6 @@ STAT_Yr <- full_join(STAT_Yr, WRKRS_df, by= c("Year", "GRID"))
 rm(BUSNS_df, HSHD_df, POPTN_df, RSDNC_df, WRKRS_df)
 
 
-
-
-colnames(YNG_2014) <- c("GRID", "YG_14")
-colnames(YNG_2015) <- c("GRID", "YG_15")
-colnames(YNG_2016) <- c("GRID", "YG_16")
-colnames(YNG_2017) <- c("GRID", "YG_17")
-colnames(YNG_2018) <- c("GRID", "YG_18")
-colnames(YNG_2019) <- c("GRID", "YG_19")
-colnames(YNG_2020) <- c("GRID", "YG_20")
-colnames(YNG_2021) <- c("GRID", "YG_21")
-colnames(YNG_2022) <- c("GRID", "YG_22")
-colnames(YNG_2023) <- c("GRID", "YG_23")
-colnames(YNG_2024) <- c("GRID", "YG_24")
-
-
-
-YNG_2014[is.na(YNG_2014)] <- 0
-YNG_2015[is.na(YNG_2015)] <- 0
-YNG_2016[is.na(YNG_2016)] <- 0
-YNG_2017[is.na(YNG_2017)] <- 0
-YNG_2018[is.na(YNG_2018)] <- 0
-YNG_2019[is.na(YNG_2019)] <- 0
-YNG_2020[is.na(YNG_2020)] <- 0
-YNG_2021[is.na(YNG_2021)] <- 0
-YNG_2022[is.na(YNG_2022)] <- 0
-YNG_2023[is.na(YNG_2023)] <- 0
-YNG_2024[is.na(YNG_2024)] <- 0
-
-YNG_2014 <- YNG_2014 %>% group_by(GRID) %>% summarize(YG_14 = sum(YG_14)) %>% ungroup()
-YNG_2015 <- YNG_2015 %>% group_by(GRID) %>% summarize(YG_15 = sum(YG_15)) %>% ungroup()
-YNG_2016 <- YNG_2016 %>% group_by(GRID) %>% summarize(YG_16 = sum(YG_16)) %>% ungroup()
-YNG_2017 <- YNG_2017 %>% group_by(GRID) %>% summarize(YG_17 = sum(YG_17)) %>% ungroup()
-YNG_2018 <- YNG_2018 %>% group_by(GRID) %>% summarize(YG_18 = sum(YG_18)) %>% ungroup()
-YNG_2019 <- YNG_2019 %>% group_by(GRID) %>% summarize(YG_19 = sum(YG_19)) %>% ungroup()
-YNG_2020 <- YNG_2020 %>% group_by(GRID) %>% summarize(YG_20 = sum(YG_20)) %>% ungroup()
-YNG_2021 <- YNG_2021 %>% group_by(GRID) %>% summarize(YG_21 = sum(YG_21)) %>% ungroup()
-YNG_2022 <- YNG_2022 %>% group_by(GRID) %>% summarize(YG_22 = sum(YG_22)) %>% ungroup()
-YNG_2023 <- YNG_2023 %>% group_by(GRID) %>% summarize(YG_23 = sum(YG_23)) %>% ungroup()
-YNG_2024 <- YNG_2024 %>% group_by(GRID) %>% summarize(YG_24 = sum(YG_24)) %>% ungroup()
-
-YNG_POP <- full_join(YNG_2014, YNG_2015, by= "GRID")
-YNG_POP <- full_join(YNG_POP, YNG_2016, by= "GRID")
-YNG_POP <- full_join(YNG_POP, YNG_2017, by= "GRID")
-YNG_POP <- full_join(YNG_POP, YNG_2018, by= "GRID")
-YNG_POP <- full_join(YNG_POP, YNG_2019, by= "GRID")
-YNG_POP <- full_join(YNG_POP, YNG_2020, by= "GRID")
-YNG_POP <- full_join(YNG_POP, YNG_2021, by= "GRID")
-YNG_POP <- full_join(YNG_POP, YNG_2022, by= "GRID")
-YNG_POP <- full_join(YNG_POP, YNG_2023, by= "GRID")
-YNG_POP <- full_join(YNG_POP, YNG_2024, by= "GRID")
-
-rm(YNG_2014, YNG_2015, YNG_2016, YNG_2017, YNG_2018, YNG_2019, YNG_2020, YNG_2021, YNG_2022, YNG_2023, YNG_2024)
 rm(zip_file, zipnames, loopyear, KCB_1km_Col_name, dir_new)
 
 save.image(paste0(dir, "/STEP_1_INITAL_DATA.RData"))
@@ -4545,3 +4493,4 @@ mlnn_model_30 <- run_mlnn_by_TYPE(TRAINING_SET_6, GRD_YNG_POP_TG, TESTING_SET_6,
 # 	cat(paste0("MLNN Test MAE for gTg_", save_name, ":", mae_test, "\n"))
 
 # }
+
