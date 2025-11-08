@@ -195,122 +195,6 @@ WRKR_B_df <- as.data.frame(WRKR_B_df)
 
 
 
-# 연령대별 인구: 국토정보플랫폼 (https://map.ngii.go.kr/mn/mainPage.do
-S20_2020 <- st_read(paste0(dir, "/NGII/POP_2020/020001025_202010.shp"))
-S30_2020 <- st_read(paste0(dir, "/NGII/POP_2020/020001028_202010.shp"))
-S20_2021 <- st_read(paste0(dir, "/NGII/POP_2021/020001025_202110.shp"))
-S30_2021 <- st_read(paste0(dir, "/NGII/POP_2021/020001028_202110.shp"))
-S20_2022 <- st_read(paste0(dir, "/NGII/POP_2022/020001025_202210.shp"))
-S30_2022 <- st_read(paste0(dir, "/NGII/POP_2022/020001028_202210.shp"))
-S20_2023 <- st_read(paste0(dir, "/NGII/POP_2023/020001025_202310.shp"))
-S30_2023 <- st_read(paste0(dir, "/NGII/POP_2023/020001028_202310.shp"))
-
-S20_2020 <- as.data.frame(S20_2020); S20_2020$LBL <- NULL; S20_2020$geometry <- NULL; S20_2020[is.na(S20_2020)] <- 0
-S30_2020 <- as.data.frame(S30_2020); S30_2020$LBL <- NULL; S30_2020$geometry <- NULL; S30_2020[is.na(S30_2020)] <- 0
-S20_2021 <- as.data.frame(S20_2021); S20_2021$LBL <- NULL; S20_2021$geometry <- NULL; S20_2021[is.na(S20_2021)] <- 0
-S30_2021 <- as.data.frame(S30_2021); S30_2021$LBL <- NULL; S30_2021$geometry <- NULL; S30_2021[is.na(S30_2021)] <- 0
-S20_2022 <- as.data.frame(S20_2022); S20_2022$LBL <- NULL; S20_2022$geometry <- NULL; S20_2022[is.na(S20_2022)] <- 0
-S30_2022 <- as.data.frame(S30_2022); S30_2022$LBL <- NULL; S30_2022$geometry <- NULL; S30_2022[is.na(S30_2022)] <- 0
-S20_2023 <- as.data.frame(S20_2023); S20_2023$LBL <- NULL; S20_2023$geometry <- NULL; S20_2023[is.na(S20_2023)] <- 0
-S30_2023 <- as.data.frame(S30_2023); S30_2023$LBL <- NULL; S30_2023$geometry <- NULL; S30_2023[is.na(S30_2023)] <- 0
-
-YNG_2020 <- full_join(S20_2020, S30_2020, by = "GID"); colnames(YNG_2020) <- c("GID", "A", "B")
-YNG_2021 <- full_join(S20_2021, S30_2021, by = "GID"); colnames(YNG_2021) <- c("GID", "A", "B")
-YNG_2022 <- full_join(S20_2022, S30_2022, by = "GID"); colnames(YNG_2022) <- c("GID", "A", "B")
-YNG_2023 <- full_join(S20_2023, S30_2023, by = "GID"); colnames(YNG_2023) <- c("GID", "A", "B")
-
-YNG_2020 <- YNG_2020 %>% mutate(VAL = A + B); YNG_2020 <- YNG_2020[,c("GID", "VAL")]
-YNG_2021 <- YNG_2021 %>% mutate(VAL = A + B); YNG_2021 <- YNG_2021[,c("GID", "VAL")]
-YNG_2022 <- YNG_2022 %>% mutate(VAL = A + B); YNG_2022 <- YNG_2022[,c("GID", "VAL")]
-YNG_2023 <- YNG_2023 %>% mutate(VAL = A + B); YNG_2023 <- YNG_2023[,c("GID", "VAL")]
-rm(S20_2020, S30_2020, S20_2021, S30_2021, S20_2022, S30_2022, S20_2023, S30_2023)
-
-
-
-
-
-for (loopyear in c(2014:2019, 2024)){
-	dir_new <- paste0(dir, "/NGII/POP_", loopyear, "/");
-	zipnames = dir(dir_new)
-
-	for (zip_file in zipnames){
-		unzip(paste0(dir_new, zip_file), exdir=dir_new)
-		if (zip_file == zipnames[1]){
-			if (grepl("20대", zip_file)){
-				YNG_TMP <- st_read(paste0(dir_new, "/nlsp_020001025.shp"))
-			} else if (grepl("30대", zip_file)) {
-				YNG_TMP <- st_read(paste0(dir_new, "/nlsp_020001028.shp"))
-			}
-		} else {
-			if (grepl("20대", zip_file)){
-				YNG_TMP <- rbind(YNG_TMP, st_read(paste0(dir_new, "/nlsp_020001025.shp")))
-			} else if (grepl("30대", zip_file)) {
-				YNG_TMP <- rbind(YNG_TMP, st_read(paste0(dir_new, "/nlsp_020001028.shp")))
-			}
-		}
-		file.remove(list.files(path = dir_new, pattern = "^nlsp_02000102[58]\\.(shp|shx|dbf|prj|cpg|shp.xml)$", full.names = TRUE))
-	}
-	if (loopyear == 2014){YNG_2014 <- YNG_TMP};
-	if (loopyear == 2015){YNG_2015 <- YNG_TMP};
-	if (loopyear == 2016){YNG_2016 <- YNG_TMP};
-	if (loopyear == 2017){YNG_2017 <- YNG_TMP};
-	if (loopyear == 2018){YNG_2018 <- YNG_TMP};
-	if (loopyear == 2019){YNG_2019 <- YNG_TMP};
-	if (loopyear == 2024){YNG_2024 <- YNG_TMP};
-	rm(YNG_TMP);
-	cat(paste0("Year data in ", loopyear, " has imported..\n"))
-	gc()
-}
-
-
-
-YNG_2014 <- as.data.frame(YNG_2014); YNG_2014$lbl <- NULL; YNG_2014$geometry <- NULL; YNG_2014[is.na(YNG_2014)] <- 0
-YNG_2015 <- as.data.frame(YNG_2015); YNG_2015$lbl <- NULL; YNG_2015$geometry <- NULL; YNG_2015[is.na(YNG_2015)] <- 0
-YNG_2016 <- as.data.frame(YNG_2016); YNG_2016$lbl <- NULL; YNG_2016$geometry <- NULL; YNG_2016[is.na(YNG_2016)] <- 0
-YNG_2017 <- as.data.frame(YNG_2017); YNG_2017$lbl <- NULL; YNG_2017$geometry <- NULL; YNG_2017[is.na(YNG_2017)] <- 0
-YNG_2018 <- as.data.frame(YNG_2018); YNG_2018$lbl <- NULL; YNG_2018$geometry <- NULL; YNG_2018[is.na(YNG_2018)] <- 0
-YNG_2019 <- as.data.frame(YNG_2019); YNG_2019$lbl <- NULL; YNG_2019$geometry <- NULL; YNG_2019[is.na(YNG_2019)] <- 0
-YNG_2024 <- as.data.frame(YNG_2024); YNG_2024$lbl <- NULL; YNG_2024$geometry <- NULL; YNG_2024[is.na(YNG_2024)] <- 0
-
-
-colnames(YNG_2014) <- c("GID", "VAL"); YNG_2014 <- YNG_2014[,c("GID", "VAL")]
-colnames(YNG_2015) <- c("GID", "VAL"); YNG_2015 <- YNG_2015[,c("GID", "VAL")]
-colnames(YNG_2016) <- c("GID", "VAL"); YNG_2016 <- YNG_2016[,c("GID", "VAL")]
-colnames(YNG_2017) <- c("GID", "VAL"); YNG_2017 <- YNG_2017[,c("GID", "VAL")]
-colnames(YNG_2018) <- c("GID", "VAL"); YNG_2018 <- YNG_2018[,c("GID", "VAL")]
-colnames(YNG_2019) <- c("GID", "VAL"); YNG_2019 <- YNG_2019[,c("GID", "VAL")]
-colnames(YNG_2024) <- c("GID", "VAL"); YNG_2024 <- YNG_2024[,c("GID", "VAL")]
-
-
-
-# KCB data from 개인신용 데이터의 연령별·공간적 분포 (https://library.krihs.re.kr/library/10120/contents/5869852?checkinId=2209581&articleId=1408901)
-# 연령대별 주거용 부동산 보유 현황과 출퇴근 이동 거리 (https://library.krihs.re.kr/library/10120/contents/5869852?checkinId=2209641&articleId=1408945)
-KCB_1km <- read_delim(paste0(dir, "/STAT/KRIHS_AGG_MART_HOM_1000M_202212.TXT"), "|", 
-                        escape_double = FALSE, trim_ws = TRUE, col_names = TRUE, 
-                        locale=locale(encoding="UTF-16LE"))
-KCB_1km_Col_name <- colnames(KCB_1km)
-KCB_1km <- as.data.frame(KCB_1km)
-
-
-
-# 기준년월 |	BS_YR_MON |
-# 광역시도구분 |	AREA_CD_L |
-# 지역 | 구분코드 |	GRID_ID
-# 연령대 |	AGE_R |	20: 29세 이하, 30: 39세 이하 ~ 60: 65세 이하, 65: 69세 이하, 70: 70세 이상
-# 직업군 |	JOB_CD |	4: 급여소득자, 5: 자영업자, 9: 기타소득 또는 무직
-# 집계인구수 |	POP_CNT |
-# 월평균 |(추정 |)소득 (당월=M)	MON_EST_INCOM
-# 총주택담보대출잔액 |	TOT_MRTG_LNBAL |
-
-
-KCB_1km <- KCB_1km[,c("BS_YR_MON", "AREA_CD_L", "GRID_ID", "AGE_R", "JOB_CD", "POP_CNT", "MON_EST_INCOM", "TOT_MRTG_LNBAL")]
-KCB_1km <- subset(KCB_1km, AGE_R < 40) # 39세 이하 연령대만 추출
-save.image(paste0(dir, "/STEP_0_ALL_STAT_DATA.RData"))
-
-
-
-
-
 
 # BUSINESS | BUSNS_df
 # HOUSEHOLD | HSHD_df
@@ -4659,4 +4543,5 @@ mlnn_model_30 <- run_mlnn_by_TYPE(TRAINING_SET_6, GRD_YNG_POP_TG, TESTING_SET_6,
 # 	mae_test <- mean(abs(GRD_YNG_POP_TG$gTg - GRD_YNG_POP_EST[[predicted_col_name]]))
 # 	cat(paste0("MLNN Test RMSE for gTg_", save_name, ":", rmse_test, "\n"))
 # 	cat(paste0("MLNN Test MAE for gTg_", save_name, ":", mae_test, "\n"))
+
 # }
